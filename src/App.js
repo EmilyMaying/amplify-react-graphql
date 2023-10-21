@@ -1,24 +1,16 @@
-import logo from "./logo.svg";
-import "@aws-amplify/ui-react/styles.css";
-import {
-  withAuthenticator,
-  Button,
-  Heading,
-  Image,
-  View,
-  Card,
-} from "@aws-amplify/ui-react";
+import { ThemeProvider } from '@mui/material/styles'
+import React from 'react'
+import Routes from './routes'
 
-function App({ signOut }) {
+import { theme } from './util/theme'
+import './index.css'
+
+function App() {
   return (
-    <View className="App">
-      <Card>
-        <Image src={logo} className="App-logo" alt="logo" />
-        <Heading level={1}>We now have Auth!</Heading>
-      </Card>
-      <Button onClick={signOut}>Sign Out</Button>
-    </View>
-  );
+      <ThemeProvider theme={theme}>
+        <Routes />
+      </ThemeProvider>
+  )
 }
 
-export default withAuthenticator(App);
+export default App
