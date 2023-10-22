@@ -8,24 +8,24 @@ import { Flex, Input, Label, View } from "@aws-amplify/ui-react";
 
 import { Typography, Button, TextField, Grid } from "@mui/material";
 
-import { getMateria } from "../../graphql/queries";
+import { getFormula } from "../../graphql/queries";
 
 import {
-  createMateria as createMateriaMutation,
-  deleteMateria as deleteMateriaMutation,
-  updateMateria as updateMateriaMutation,
+  createFormula as createFormulaMutation,
+  deleteFormula as deleteFormulaMutation,
+  updateFormula as updateFormulaMutation,
 } from "../../graphql/mutations";
 
-const MateriaisForm = () => {
-  const [materiaData, setMateriaData] = useState({
+const FormulaForm = () => {
+  const [formulaData, setFormulaData] = useState({
     id: "",
     nome: "",
     custo: 0,
-    fornecedor: "",
-    formulas: [],
+    observacao: "",
+    total: 0,
   });
 
-  const [isMateriaNew, setIsMateriaNew] = useState(false);
+  const [isFormulaNew, setIsFormulaNew] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState([]);
@@ -34,52 +34,52 @@ const MateriaisForm = () => {
   const navigate = useNavigate();
   const params = useParams();
 
-  async function createMateria(event) {
+  async function createFormula(event) {
     event.preventdefault();
     const form = new FormData(event.target);
     const data = {
       nome: form.get("nome"),
       custo: form.get("custo"),
-      fornecedor: form.get("fornecedor"),
-      formulas: materiaData.formulas,
+      observacao: form.get("observacao"),
+      total: form.get("total"),
     };
     await API.graphql({
-      query: createMateriaMutation,
+      query: createFormulaMutation,
       variables: { input: data },
     });
     event.target.reset();
-    navigate("/materias");
+    navigate("/formulas");
   }
 
-  async function updateMateriaById(event) {
+  async function updateFormulaById(event) {
     const form = new FormData(event.target);
     const data = {
-      id: materiaData.id,
+      id: formulaData.id,
       nome: form.get("nome"),
       custo: form.get("custo"),
-      fornecedor: form.get("fornecedor"),
-      formulas: materiaData.formulas,
+      observacao: form.get("observacao"),
+      total: form.get("total"),
     };
 
     await API.graphql({
-      query: updateMateriaMutation,
+      query: updateFormulaMutation,
       variables: { input: data },
     });
   }
 
   useEffect(() => {
-    async function getMateriaById(id) {
-      const selectedMaterial = await API.graphql({
-        query: getMateria,
+    async function getFormulaById(id) {
+      const selectedFormula = await API.graphql({
+        query: getFormula,
         variables: { id: id },
       });
-      console.log(selectedMaterial.data.getMateria);
-      setMateriaData(selectedMaterial.data.getMateria);
+      console.log(selectedFormula.data.getFormula);
+      setFormulaData(selectedFormula.data.getFormula);
     }
 
     if (params.id !== undefined) {
-      getMateriaById(params.id);
-      setIsMateriaNew(false);
+      getFormulaById(params.id);
+      setIsFormulaNew(false);
       return;
     }
   }, []);
@@ -88,7 +88,7 @@ const MateriaisForm = () => {
     <View
       as="form"
       margin="3rem 0"
-      onSubmit={isMateriaNew ? createMateria : updateMateriaById}
+      onSubmit={isFormulaNew ? createFormula : updateFormulaById}
     >
       <Grid container spacing={2}>
         <Grid item xs={12} className="h-ficha-form-1-2">
@@ -99,7 +99,7 @@ const MateriaisForm = () => {
                   <Grid container spacing={2} className="h-grid-group">
                     <Grid item xs={12}>
                       <Typography variant="h4" className="h-grid-title">
-                        Materia Prima
+                        Formula
                       </Typography>
                     </Grid>
                     <Grid
@@ -111,10 +111,10 @@ const MateriaisForm = () => {
                         name="nome"
                         placeholder="Nome"
                         label="Nome"
-                        value={materiaData.nome}
+                        value={formulaData.nome}
                         onChange={(event) =>
-                          setMateriaData({
-                            ...materiaData,
+                          setFormulaData({
+                            ...formulaData,
                             nome: event.target.value,
                           })
                         }
@@ -129,25 +129,43 @@ const MateriaisForm = () => {
                           pattern: "[0-9]*",
                         }}
                         variation="quiet"
-                        value={materiaData.custo}
+                        value={formulaData.custo}
                         onChange={(event) =>
-                          setMateriaData({
-                            ...materiaData,
+                          setFormulaData({
+                            ...formulaData,
                             custo: event.target.value,
                           })
                         }
                         required
                       />
                       <TextField
-                        name="fornecedor"
-                        placeholder="Fornecedor"
-                        label="Fornecedor"
+                        name="observacao"
+                        placeholder="Observação"
+                        label="Observação"
                         variation="quiet"
-                        value={materiaData.fornecedor}
+                        value={formulaData.observacao}
                         onChange={(event) =>
-                          setMateriaData({
-                            ...materiaData,
-                            fornecedor: event.target.value,
+                          setFormulaData({
+                            ...formulaData,
+                            observacao: event.target.value,
+                          })
+                        }
+                        required
+                      />
+                      <TextField
+                        name="total"
+                        placeholder="Total"
+                        label="Total"
+                        inputProps={{
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
+                        }}
+                        variation="quiet"
+                        value={formulaData.total}
+                        onChange={(event) =>
+                          setFormulaData({
+                            ...formulaData,
+                            total: event.target.value,
                           })
                         }
                         required
@@ -170,7 +188,7 @@ const MateriaisForm = () => {
           }}
         >
           <Button
-            onClick={() => navigate("/materias")}
+            onClick={() => navigate("/formulas")}
             size="large"
             disabled={isLoading}
           >
@@ -185,4 +203,4 @@ const MateriaisForm = () => {
   );
 };
 
-export default MateriaisForm;
+export default FormulaForm;

@@ -6,6 +6,7 @@ import Materia from "../pages/Materiais";
 import Formulas from "../pages/Formulas";
 import MateriaisForm from "../pages/MateriaisForm";
 import { BrowserRouter } from "react-router-dom/dist";
+import FormulaForm from "../pages/FormulasForm";
 
 const Routes = () => (
   <BrowserRouter>
@@ -17,6 +18,8 @@ const Routes = () => (
         <Route path="/formulas" element={<Formulas />} />
         <Route path="/novamateria" element={<MateriaisForm />} />
         <Route path="/editarmateria/:id" element={<MateriaisForm />} />
+        <Route path="/novaformula" element={<FormulaForm />} />
+        <Route path="/editarformula/:id" element={<FormulaForm />} />
         {/* <Route path="/home" element={<List />} />
         <Route path="/cadastro" element={<HorseForm />} />
         <Route path="/editar/:id" element={<HorseForm />} />

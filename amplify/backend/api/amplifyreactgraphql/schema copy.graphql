@@ -1,0 +1,33 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY {
+  globalAuthRule: AuthRule = { allow: public }
+} # FOR TESTING ONLY!
+type Materia @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  nome: String!
+  custo: Float
+  fornecedor: String
+  formulas: [FormulaMaterias] @connection(keyName: "byFormula", fields: ["id"])
+}
+
+type Formula @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  nome: String!
+  custo: Float
+  observacao: String
+  total: Float
+  materias: [FormulaMaterias] @connection(keyName: "byMateria", fields: ["id"])
+}
+
+type FormulaMaterias
+  @model
+  @key(name: "byMateria", fields: ["materiaID", "formulaID"])
+  @key(name: "byFormula", fields: ["formulaID", "materiaID"]) {
+  id: ID!
+  materiaID: ID!
+  formulaID: ID!
+  quantidade: Float
+  materia: Materia! @connection(fields: ["materiaID"])
+  formula: Formula! @connection(fields: ["formulaID"])
+}

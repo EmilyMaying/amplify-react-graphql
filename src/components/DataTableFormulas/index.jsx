@@ -21,7 +21,7 @@ const DataTable = ({ data, count, page, setPage, loading }) => {
             <TableRow>
               <TableCell sx={{ width: "32%" }}>Nome</TableCell>
               <TableCell sx={{ width: "15%" }}>Custo</TableCell>
-              <TableCell sx={{ width: "12%" }}>Fornecedor</TableCell>
+              <TableCell sx={{ width: "12%" }}>Total</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

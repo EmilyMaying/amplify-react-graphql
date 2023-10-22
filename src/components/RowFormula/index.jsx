@@ -10,7 +10,7 @@ const Row = ({ data }) => {
         <TableCell>
           <Link
             onClick={() => {
-              navigate(`/editarmateria/${data.id}`);
+              navigate(`/editarformula/${data.id}`);
             }}
             sx={{ cursor: "pointer" }}
           >
@@ -19,7 +19,7 @@ const Row = ({ data }) => {
           &nbsp;
         </TableCell>
         <TableCell>{data.custo}</TableCell>
-        <TableCell>{data.fornecedor}</TableCell>
+        <TableCell>{data.total}</TableCell>
       </TableRow>
     </>
   );

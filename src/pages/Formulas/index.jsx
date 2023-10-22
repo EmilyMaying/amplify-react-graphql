@@ -7,31 +7,31 @@ import DataTable from "../../components/DataTableFormulas";
 // import TableFilter from '../../components/TableFilter'
 // import TableSearch from '../../components/TableSearch'
 
-import { listMaterias } from "../../graphql/queries";
+import { listFormulas } from "../../graphql/queries";
 
-const Formulas = () => {
+const Formula = () => {
   const navigate = useNavigate();
 
-  const [materiaData, setMateriaData] = useState([]);
+  const [formulaData, setFormulaData] = useState([]);
   const [search, setSearch] = useState("");
   const [searchOptions, setSearchOptions] = useState([]);
 
   const [page, setPage] = useState(0);
-  const [count, setCount] = useState(3);
+  const [count, setCount] = useState(10);
 
   useEffect(() => {
-    fetchNotes();
+    fetchFormulas();
   }, []);
 
-  async function fetchNotes() {
+  async function fetchFormulas() {
     const apiData = await API.graphql({
-      query: listMaterias,
+      query: listFormulas,
       variables: {
         limit: count,
       },
     });
-    const materialFromAPI = apiData.data.listMaterias.items;
-    setMateriaData(materialFromAPI);
+    const formulalFromAPI = apiData.data.listFormulas.items;
+    setFormulaData(formulalFromAPI);
   }
 
   return (
@@ -53,7 +53,12 @@ const Formulas = () => {
                 lg={3}
                 style={{ height: "70px", textAlign: "right" }}
               >
-                <Button style={{ height: "100%" }} onClick={() => {}}>
+                <Button
+                  style={{ height: "100%" }}
+                  onClick={() => {
+                    navigate("/novaformula");
+                  }}
+                >
                   Nova Formula
                 </Button>
               </Grid>
@@ -63,7 +68,7 @@ const Formulas = () => {
       </Grid>
       <Grid item xs={12}>
         <DataTable
-          data={materiaData}
+          data={formulaData}
           page={page}
           count={count}
           setPage={setPage}
@@ -74,4 +79,4 @@ const Formulas = () => {
   );
 };
 
-export default Formulas;
+export default Formula;
