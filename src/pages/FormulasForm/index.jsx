@@ -8,13 +8,18 @@ import { Flex, Input, Label, View } from "@aws-amplify/ui-react";
 
 import { Typography, Button, TextField, Grid } from "@mui/material";
 
-import { getFormula } from "../../graphql/queries";
+import { getFormula, listFormulaMaterias } from "../../graphql/queries";
 
 import {
   createFormula as createFormulaMutation,
   deleteFormula as deleteFormulaMutation,
   updateFormula as updateFormulaMutation,
-} from "../../graphql/mutations";
+  createFormulaMaterias as createFormulaMateriasMutation,
+  deleteFormulaMaterias as deleteFormulaMateriasMutation,
+ } from "../../graphql/mutations";
+
+import DataTable from "../../components/DataTableFormulaMaterias";
+
 
 const FormulaForm = () => {
   const [formulaData, setFormulaData] = useState({
@@ -23,9 +28,19 @@ const FormulaForm = () => {
     custo: 0,
     observacao: "",
     total: 0,
+    materias: [],
   });
 
-  const [isFormulaNew, setIsFormulaNew] = useState(false);
+  const [formulaMateriasData, setFormulaMateriasData] = useState({
+    id: "",
+    quantidade: 0,
+  });
+
+  const [page, setPage] = useState(0);
+  const [count, setCount] = useState(10);
+
+
+  const [isFormulaNew, setIsFormulaNew] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState([]);
@@ -35,7 +50,7 @@ const FormulaForm = () => {
   const params = useParams();
 
   async function createFormula(event) {
-    event.preventdefault();
+    event.preventDefault();
     const form = new FormData(event.target);
     const data = {
       nome: form.get("nome"),
@@ -43,15 +58,17 @@ const FormulaForm = () => {
       observacao: form.get("observacao"),
       total: form.get("total"),
     };
+
     await API.graphql({
       query: createFormulaMutation,
       variables: { input: data },
     });
-    event.target.reset();
+
     navigate("/formulas");
   }
 
   async function updateFormulaById(event) {
+    event.preventDefault();
     const form = new FormData(event.target);
     const data = {
       id: formulaData.id,
@@ -67,13 +84,29 @@ const FormulaForm = () => {
     });
   }
 
+  async function createFormulaMateria(event) {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    const data = {
+      quantidade: form.get("quantidade"),
+    };
+
+    await API.graphql({
+      query: createFormulaMateriasMutation,
+      variables: { input: data },
+    });
+
+  }
+
+ 
+
+
   useEffect(() => {
     async function getFormulaById(id) {
       const selectedFormula = await API.graphql({
         query: getFormula,
         variables: { id: id },
       });
-      console.log(selectedFormula.data.getFormula);
       setFormulaData(selectedFormula.data.getFormula);
     }
 
@@ -84,11 +117,25 @@ const FormulaForm = () => {
     }
   }, []);
 
+  async function fetchFormulaMaterias() {
+    const apiData = await API.graphql({
+      query: listFormulaMaterias,
+      variables: {
+        limit: 5,
+      },
+    });
+    const formulaMateriaFromAPI = apiData.data.listFormulaMaterias.items;
+    setFormulaMateriasData(formulaMateriaFromAPI);
+  }
+
+
   return (
-    <View
+  <>  
+     
+ <View
       as="form"
       margin="3rem 0"
-      onSubmit={isFormulaNew ? createFormula : updateFormulaById}
+      onSubmit={(e) => {isFormulaNew ? createFormula(e) : updateFormulaById(e)}}
     >
       <Grid container spacing={2}>
         <Grid item xs={12} className="h-ficha-form-1-2">
@@ -200,6 +247,42 @@ const FormulaForm = () => {
         </Grid>
       </Grid>
     </View>
+ <View
+      as="form"
+      margin="3rem 0"
+      onSubmit={(e) => {createFormulaMateria(e)}}
+    >
+
+
+              <TextField
+                        name="quantidade"
+                        placeholder="Quantidade"
+                        label="Quantidade"
+                        value={formulaMateriasData.quantidade}
+                        onChange={(event) =>
+                          setFormulaMateriasData({
+                            ...formulaMateriasData,
+                            quantidade: event.target.value,
+                          })
+                        }
+                        required
+                      />
+          <Button type="submit" size="large">
+           Adicionar 
+          </Button>
+ 
+      </View>
+      <Grid item xs={12}>
+        <DataTable
+          data={formulaMateriasData}
+          page={page}
+          count={count}
+          setPage={setPage}
+          loading={false}
+        />
+      </Grid>
+ 
+  </>
   );
 };
 

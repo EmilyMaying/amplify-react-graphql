@@ -17,7 +17,7 @@ const Materia = () => {
   const [searchOptions, setSearchOptions] = useState([]);
 
   const [page, setPage] = useState(0);
-  const [count, setCount] = useState(3);
+  const [count, setCount] = useState(13);
 
   useEffect(() => {
     fetchMaterias();

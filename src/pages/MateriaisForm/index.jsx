@@ -22,10 +22,9 @@ const MateriaisForm = () => {
     nome: "",
     custo: 0,
     fornecedor: "",
-    formulas: [],
   });
 
-  const [isMateriaNew, setIsMateriaNew] = useState(false);
+  const [isMateriaNew, setIsMateriaNew] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState([]);
@@ -35,30 +34,30 @@ const MateriaisForm = () => {
   const params = useParams();
 
   async function createMateria(event) {
-    event.preventdefault();
+    event.preventDefault();
     const form = new FormData(event.target);
     const data = {
       nome: form.get("nome"),
       custo: form.get("custo"),
       fornecedor: form.get("fornecedor"),
-      formulas: materiaData.formulas,
     };
+
     await API.graphql({
       query: createMateriaMutation,
       variables: { input: data },
     });
-    event.target.reset();
-    navigate("/materias");
+
+    navigate("/materias")
   }
 
   async function updateMateriaById(event) {
+    event.preventDefault();
     const form = new FormData(event.target);
     const data = {
       id: materiaData.id,
       nome: form.get("nome"),
       custo: form.get("custo"),
       fornecedor: form.get("fornecedor"),
-      formulas: materiaData.formulas,
     };
 
     await API.graphql({
@@ -73,7 +72,6 @@ const MateriaisForm = () => {
         query: getMateria,
         variables: { id: id },
       });
-      console.log(selectedMaterial.data.getMateria);
       setMateriaData(selectedMaterial.data.getMateria);
     }
 
@@ -88,7 +86,7 @@ const MateriaisForm = () => {
     <View
       as="form"
       margin="3rem 0"
-      onSubmit={isMateriaNew ? createMateria : updateMateriaById}
+      onSubmit={(e) => {isMateriaNew ? createMateria(e) : updateMateriaById(e)}}
     >
       <Grid container spacing={2}>
         <Grid item xs={12} className="h-ficha-form-1-2">

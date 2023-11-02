@@ -8,10 +8,6 @@ export const getMateria = /* GraphQL */ `
       nome
       custo
       fornecedor
-      formulas {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -86,7 +82,6 @@ export const getFormulaMaterias = /* GraphQL */ `
       quantidade
       createdAt
       updatedAt
-      materiaFormulasId
       formulaMateriasId
       __typename
     }
@@ -104,7 +99,6 @@ export const listFormulaMaterias = /* GraphQL */ `
         quantidade
         createdAt
         updatedAt
-        materiaFormulasId
         formulaMateriasId
         __typename
       }

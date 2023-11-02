@@ -8,10 +8,6 @@ export const onCreateMateria = /* GraphQL */ `
       nome
       custo
       fornecedor
-      formulas {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -25,10 +21,6 @@ export const onUpdateMateria = /* GraphQL */ `
       nome
       custo
       fornecedor
-      formulas {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -42,10 +34,6 @@ export const onDeleteMateria = /* GraphQL */ `
       nome
       custo
       fornecedor
-      formulas {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -115,7 +103,6 @@ export const onCreateFormulaMaterias = /* GraphQL */ `
       quantidade
       createdAt
       updatedAt
-      materiaFormulasId
       formulaMateriasId
       __typename
     }
@@ -130,7 +117,6 @@ export const onUpdateFormulaMaterias = /* GraphQL */ `
       quantidade
       createdAt
       updatedAt
-      materiaFormulasId
       formulaMateriasId
       __typename
     }
@@ -145,7 +131,6 @@ export const onDeleteFormulaMaterias = /* GraphQL */ `
       quantidade
       createdAt
       updatedAt
-      materiaFormulasId
       formulaMateriasId
       __typename
     }
